@@ -75,14 +75,24 @@
       }
     }
 
-    function refreshAll() {
-      refreshImages();
-      refreshTime();
-    }
+  async function refreshAll() {
+    const t = Date.now();
+    document.getElementById("cam1").src = "cam1.jpg?" + t;
+    document.getElementById("cam2").src = "cam2.jpg?" + t;
 
-    refreshAll();
-    setInterval(refreshAll, 60 * 60 * 1000);
+    try {
+      const res = await fetch("latest.txt?" + t);
+      const text = await res.text();
+      document.getElementById("updateTime").textContent = text.trim() + " 更新";
+    } catch (e) {
+      document.getElementById("updateTime").textContent = "取得失敗";
+    }
+  }
+
+  refreshAll();
+  setInterval(refreshAll, 60 * 60 * 1000);
   </script>
 
 </body>
+
 </html>
