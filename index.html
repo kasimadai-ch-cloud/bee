@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>屋上ニホンミツバチ観察プロジェクト</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+      background: #f7f7f7;
+      color: #222;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    .info, .camera-block {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      display: block;
+    }
+    .caption {
+      font-size: 1.1em;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    .note {
+      font-size: 0.95em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🐝 屋上ニホンミツバチ観察プロジェクト</h1>
+
+  <div class="info">
+    <div><strong>最終更新時刻：</strong><span id="updateTime">読み込み中...</span></div>
+    <div class="note">画像は1時間ごとに更新されます。</div>
+  </div>
+
+  <div class="camera-block">
+    <div class="caption">巣箱全体</div>
+    <img id="cam1" src="cam1.jpg" alt="巣箱全体">
+  </div>
+
+  <div class="camera-block">
+    <div class="caption">巣門アップ</div>
+    <img id="cam2" src="cam2.jpg" alt="巣門アップ">
+  </div>
+
+  <script>
+    function refreshImages() {
+      const t = Date.now();
+      document.getElementById("cam1").src = "cam1.jpg?" + t;
+      document.getElementById("cam2").src = "cam2.jpg?" + t;
+    }
+
+    async function refreshTime() {
+      try {
+        const res = await fetch("latest.txt?" + Date.now());
+        const text = await res.text();
+        document.getElementById("updateTime").textContent = text.trim();
+      } catch (e) {
+        document.getElementById("updateTime").textContent = "取得できませんでした";
+      }
+    }
+
+    function refreshAll() {
+      refreshImages();
+      refreshTime();
+    }
+
+    refreshAll();
+    setInterval(refreshAll, 60 * 60 * 1000);
+  </script>
+
+</body>
+</html>
